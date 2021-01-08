@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### Voice files ###
-src/resources/voice/
+src/main/resources/voice/
