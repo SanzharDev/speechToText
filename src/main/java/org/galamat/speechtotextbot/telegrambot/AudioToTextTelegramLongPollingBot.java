@@ -38,6 +38,7 @@ public class AudioToTextTelegramLongPollingBot extends TelegramLongPollingBot {
     private final FileDownloadService fileDownloadService;
 
     public AudioToTextTelegramLongPollingBot(String botToken, FileDownloadService fileDownloadService) {
+        super.getOptions().setMaxThreads(3);
         this.botToken = botToken;
         this.fileDownloadService = fileDownloadService;
     }
@@ -54,18 +55,23 @@ public class AudioToTextTelegramLongPollingBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        String messageText = "Отправьте пожалуйста аудиосообщения на казахском языке";
-
+        logger.info(String.format("--------------------- Update received at %s", new Date(System.currentTimeMillis())));
         if (update.hasMessage() && update.getMessage().hasVoice()) {
-            logger.info(String.format("<<<<<<<<<<< Time start: %s", new Date(System.currentTimeMillis())));
-            messageText = onVoiceMessageAccepted(update);
-            logger.info(String.format("Message received: %s", messageText));
+           Runnable task = () -> {
+               logger.info(String.format("<<<<<<<<<<< Time start: %s", new Date(System.currentTimeMillis())));
+               String messageText = onVoiceMessageAccepted(update);
+               logger.info(String.format("Message received: %s", messageText));
+               sendMessage(messageText, String.valueOf(update.getMessage().getChatId()));
+           };
+           Thread newThread = new Thread(task);
+           newThread.start();
         }
+    }
 
+    private synchronized void sendMessage(String messageText, String chatId) {
         SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(update.getMessage().getChatId()));
+        message.setChatId(chatId);
         message.setText(messageText);
-
         try {
             execute(message);
             logger.info(String.format(">>>>>>>>>>> Time finish: %s", new Date(System.currentTimeMillis())));
@@ -85,13 +91,18 @@ public class AudioToTextTelegramLongPollingBot extends TelegramLongPollingBot {
             String downloadVoiceUrl = String.format("https://api.telegram.org/file/bot%s/%s", botToken, filePath);
             String oggAudioPath = fileDownloadService.downloadFile(downloadVoiceUrl, filePath);
             if (oggAudioPath == null || oggAudioPath.isEmpty()) {
-                return "Cannot convert your voice message to text";
+                return "Не удется конвертировать аудио в текст";
             }
-            return requestDsModel(oggAudioPath);
+            String message = requestDsModel(oggAudioPath);
+            if (message.isEmpty()) {
+                logger.warn(String.format("For audio: %s, received empty text", oggAudioPath));
+                return "Аудио записано в плохом качестве, пожалуйста повторите";
+            }
+            return message;
         } catch (ExecutionException | InterruptedException | IOException e ) {
             e.printStackTrace();
         }
-        return "Cannot convert your voice message to text";
+        return "Не удется конвертировать аудио в текст";
     }
 
     private String requestDsModel(String oggFilePath) throws IOException {

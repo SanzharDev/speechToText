@@ -16,7 +16,7 @@ public class TelegramBotRunner {
 
     private final Logger logger = LogManager.getLogger(TelegramBotRunner.class.getName());
 
-    private FileDownloadService fileDownloadService;
+    private final FileDownloadService fileDownloadService;
 
     public TelegramBotRunner(FileDownloadService fileDownloadService) {
         this.fileDownloadService = fileDownloadService;
