@@ -17,9 +17,9 @@ public class FileDownloadUtil {
     private static final Logger logger = LogManager.getLogger(FileDownloadUtil.class.getName());
 
     public static String downloadFile(String srcFileUrl, String dstFilePath) throws ExecutionException, InterruptedException, IOException {
-        logger.info(String.format("Downloading file from: %s", srcFileUrl));
+        logger.info("Downloading file from: {}", srcFileUrl);
         String fileDestination = String.format("%s\\%s", DIRECTORY_NAME, dstFilePath);
-        logger.info(String.format("Downloading file to: %s", fileDestination));
+        logger.info("Downloading file to: {}", fileDestination);
         try {
             URLConnection conn = new URL(srcFileUrl).openConnection();
             InputStream is = conn.getInputStream();

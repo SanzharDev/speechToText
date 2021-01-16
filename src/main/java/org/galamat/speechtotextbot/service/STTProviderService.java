@@ -34,17 +34,17 @@ public class STTProviderService {
     private final Logger logger = LogManager.getLogger(STTProviderService.class.getName());
 
     public SendMessage runOnVoiceTask(Update update, final String botToken) {
-        logger.info(String.format("<<<<<<<<<<< Time start: %s", new Date(System.currentTimeMillis())));
+        logger.info("<<<<<<<<<<< Time start: {}", new Date(System.currentTimeMillis()));
         String messageText = onVoiceMessageAccepted(update, botToken);
-        logger.info(String.format("Message received: %s", messageText));
+        logger.info("Message received: {}", messageText);
         return constructTextOfVoiceMessage(messageText, String.valueOf(update.getMessage().getChatId()));
     }
 
     private String onVoiceMessageAccepted(Update update, String botToken) {
         logger.info("Accepted voice message");
         Voice voice = update.getMessage().getVoice();
-        logger.info(String.format("Voice message duration: %s", voice.getDuration()));
-        logger.info(String.format("Voice file id: %s", voice.getFileId()));
+        logger.info("Voice message duration: {}", voice.getDuration());
+        logger.info("Voice file id: {}", voice.getFileId());
 
         final String badAudioMessage = "Не удется конвертировать аудио в текст";
         try {
@@ -57,9 +57,9 @@ public class STTProviderService {
             }
             long startTime = System.currentTimeMillis();
             String message = new STTProviderService().requestDsModel(oggAudioPath);
-            logger.info(">>>>>>>>>>> Time Diff: " + (System.currentTimeMillis() - startTime));
+            logger.info(">>>>>>>>>>> Time Diff for requesting DSMODEL took {} milliseconds ",System.currentTimeMillis() - startTime);
             if (message.isEmpty()) {
-                logger.warn(String.format("For audio: %s, received empty text", oggAudioPath));
+                logger.warn("For audio: {}, received empty text", oggAudioPath);
                 return badAudioMessage;
             }
             return message;

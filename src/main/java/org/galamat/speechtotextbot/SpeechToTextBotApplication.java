@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.Async;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 
 @SpringBootApplication
 public class SpeechToTextBotApplication {
@@ -19,7 +19,7 @@ public class SpeechToTextBotApplication {
 
     @Bean
     public TelegramLongPollingBotController telegramLongPollingBot() {
-        return new TelegramLongPollingBotController(botToken);
+        return new TelegramLongPollingBotController(botToken, new DefaultBotOptions());
     }
 
 }

@@ -20,14 +20,11 @@ public class TextCorrectionService {
             task = () -> {
                 SendMessage message = constructButtonReplyMessage("Спасибо!",
                         String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
-//                sendMessage(message);
             };
         } else if (msg.equals("Button 'no' been pressed")) {
             task = () -> {
                 SendMessage message = constructButtonReplyMessage("Введите исправленный текст",
                         String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
-//                sendMessage(message);
-
             };
         }
         if (task != null) {
