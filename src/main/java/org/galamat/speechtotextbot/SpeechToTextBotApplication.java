@@ -1,12 +1,11 @@
 package org.galamat.speechtotextbot;
 
-import org.galamat.speechtotextbot.telegrambot.AudioToTextTelegramLongPollingBot;
+import org.galamat.speechtotextbot.telegrambot.TelegramLongPollingBotController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.springframework.scheduling.annotation.Async;
 
 @SpringBootApplication
 public class SpeechToTextBotApplication {
@@ -19,8 +18,8 @@ public class SpeechToTextBotApplication {
     }
 
     @Bean
-    public AudioToTextTelegramLongPollingBot telegramLongPollingBot() {
-        return new AudioToTextTelegramLongPollingBot(botToken);
+    public TelegramLongPollingBotController telegramLongPollingBot() {
+        return new TelegramLongPollingBotController(botToken);
     }
 
 }
