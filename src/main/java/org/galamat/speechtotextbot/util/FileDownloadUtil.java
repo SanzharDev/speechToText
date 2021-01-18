@@ -4,24 +4,22 @@ package org.galamat.speechtotextbot.util;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.ExecutionException;
 
-@Service
-public class FileDownloadService {
+public class FileDownloadUtil {
 
     private static final String DIRECTORY_NAME = "C:\\Users\\User\\IdeaProjects\\speach-to-text-bot\\src\\main\\resources";
 
-    private static final Logger logger = LogManager.getLogger(FileDownloadService.class.getName());
+    private static final Logger logger = LogManager.getLogger(FileDownloadUtil.class.getName());
 
-    public String downloadFile(String srcFileUrl, String dstFilePath) throws ExecutionException, InterruptedException, IOException {
-        logger.info(String.format("Downloading file from: %s", srcFileUrl));
+    public static String downloadFile(String srcFileUrl, String dstFilePath) throws ExecutionException, InterruptedException, IOException {
+        logger.info("Downloading file from: {}", srcFileUrl);
         String fileDestination = String.format("%s\\%s", DIRECTORY_NAME, dstFilePath);
-        logger.info(String.format("Downloading file to: %s", fileDestination));
+        logger.info("Downloading file to: {}", fileDestination);
         try {
             URLConnection conn = new URL(srcFileUrl).openConnection();
             InputStream is = conn.getInputStream();
